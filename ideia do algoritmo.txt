@@ -1,0 +1,3 @@
+verficar de quem é a vez 
+verificar se o simbolo digitado corresponde a vez com base na contagem de 'x' e 'o'
+aplicar alteração
