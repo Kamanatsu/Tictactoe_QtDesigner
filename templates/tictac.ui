@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Jogo da velha</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>velha.jpeg</normaloff>velha.jpeg</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QFrame" name="verticalFrame">
     <property name="geometry">
