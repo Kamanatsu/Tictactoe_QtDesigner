@@ -1,5 +1,6 @@
 from PyQt5 import  uic,QtWidgets
-
+from time import sleep
+from playsound import playsound
 
 #===================FUNCIONAMENTO=====================
 #|  1. Puxa os dados dos campos do game
@@ -56,6 +57,68 @@ def verify_turn(lista):
     else:
         return "vez do o"
     
+def fim_de_jogo():
+    tictac.lineEdit.setText("")
+    tictac.lineEdit_2.setText("")
+    tictac.lineEdit_3.setText("")
+    tictac.lineEdit_4.setText("")
+    tictac.lineEdit_5.setText("")
+    tictac.lineEdit_6.setText("")
+    tictac.lineEdit_7.setText("")
+    tictac.lineEdit_8.setText("")
+    tictac.lineEdit_9.setText("")
+    tictac.close()
+    primeira.show()
+    primeira.label_4.setText("Fim de Jogo")
+    
+    
+    
+def win():
+    global turno
+    fim = False
+    l1 = tictac.lineEdit.text()
+    l2 = tictac.lineEdit_2.text()
+    l3 = tictac.lineEdit_3.text()
+    l4 = tictac.lineEdit_4.text()
+    l5 = tictac.lineEdit_5.text()
+    l6 = tictac.lineEdit_6.text()
+    l7 = tictac.lineEdit_7.text()
+    l8 = tictac.lineEdit_8.text()
+    l9 = tictac.lineEdit_9.text()
+    
+    # vitorias horizontais
+    if l1==l2==l3 and l1!="":
+        
+        fim = True
+    elif l4==l5==l6 and l3!="":
+        
+        fim = True
+    elif l7==l8==l9 and l6!="":
+        
+        fim = True
+    elif l1==l4==l7 and l1!="":# vitorias verticais
+        
+        fim = True
+    elif l2==l5==l8 and l2!="":
+        
+        fim = True
+    elif l3==l6==l9 and l3!="":
+        
+        fim = True
+    elif l1==l5==l9 and l1!="":# vitorias diagonais
+        
+        fim = True
+    elif l3==l5==l7 and l3!="":
+        
+        fim = True
+    else:
+        if turno == 9:
+            tictac.label.setText("Empate")
+            fim = True
+    
+    if fim == True:
+        fim_de_jogo()
+    
 def backup(lista): #faz backup de uma lista
     global backup_lista
     backup_lista[0] = tictac.lineEdit.text()
@@ -97,12 +160,13 @@ def game_dupla():#Incrementa +1 na variavel "turno" para cada lance valido
             turno = turno + 1
             tictac.label.setText("")
             backup(lista)#faz backup da lista
-            tictac.label.setText("Lance Correto")
+            win()
             
         else:
             tictac.label.setText("Lance inapropriado")
             replace(backup_lista)#recupera a ultima tela que esteve correta
-            
+    
+    
 
 
 #====================================================|
@@ -121,7 +185,7 @@ primeira = uic.loadUi("templates/principal.ui")
 def abrir_tela():
     primeira.close()
     tictac.show()
-
+    tictac.label.setText("X começa")
 primeira.pushButton.clicked.connect(abrir_tela)
 #===========================================
 
@@ -130,5 +194,6 @@ tictac.pushButton.clicked.connect(game_dupla)
 #===========================================
 
 
-primeira.show() #chama a tela do jogo da velha
+primeira.show() #chama a tela de inicio
+playsound("music/mensagem.mp3")#som ao entrar
 app.exec()
