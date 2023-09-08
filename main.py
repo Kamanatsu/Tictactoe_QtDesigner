@@ -57,7 +57,11 @@ def verify_turn(lista):
     else:
         return "vez do o"
     
-def fim_de_jogo():
+def reset():
+    global backup_lista
+    global turno
+    turno = 1
+    backup_lista = ['', '', '', '', '', '', '', '', '']
     tictac.lineEdit.setText("")
     tictac.lineEdit_2.setText("")
     tictac.lineEdit_3.setText("")
@@ -74,6 +78,7 @@ def fim_de_jogo():
     
     
 def win():
+    global backup_lista
     global turno
     fim = False
     l1 = tictac.lineEdit.text()
@@ -88,13 +93,10 @@ def win():
     
     # vitorias horizontais
     if l1==l2==l3 and l1!="":
-        
         fim = True
-    elif l4==l5==l6 and l3!="":
-        
+    elif l4==l5==l6 and l4!="":
         fim = True
-    elif l7==l8==l9 and l6!="":
-        
+    elif l7==l8==l9 and l7!="":
         fim = True
     elif l1==l4==l7 and l1!="":# vitorias verticais
         
@@ -117,7 +119,7 @@ def win():
             fim = True
     
     if fim == True:
-        fim_de_jogo()
+        reset()
     
 def backup(lista): #faz backup de uma lista
     global backup_lista
