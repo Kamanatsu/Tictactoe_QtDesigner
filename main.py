@@ -2,21 +2,10 @@ from PyQt5 import  uic,QtWidgets
 from time import sleep
 from playsound import playsound
 
-#===================FUNCIONAMENTO=====================
-#|  1. Puxa os dados dos campos do game
-#|  2. Verifica as alterações feitas e se são validas
-#|  3. Seta permanentemente os valores digitados
-#| 
-#|
-#|
-#|
 
 turno = 1 #Variavel global que marca os turnos do jogo
 backup_lista = ['', '', '', '', '', '', '', '', '']
 
-#====================================================|
-#                      Functions                     |
-#====================================================|
 
 def verificador(turno): #verifica de quem é a vez com base na variavel global "turno"
     if (turno%2) == 0:
@@ -43,7 +32,7 @@ def getCampos(): #pega os valores dos campos do game e transforma em uma lista d
         return [l1,l2,l3,l4,l5,l6,l7,l8,l9]
 
 
-def verify_turn(lista):
+def verify_turn(lista):#verifica de quem é a vez com base no numero de "x" e "o" ja em jogo
     contX = 0
     contO = 0
     
@@ -123,15 +112,10 @@ def win():
     
 def backup(lista): #faz backup de uma lista
     global backup_lista
-    backup_lista[0] = tictac.lineEdit.text()
-    backup_lista[1] = tictac.lineEdit_2.text()
-    backup_lista[2] = tictac.lineEdit_3.text()
-    backup_lista[3] = tictac.lineEdit_4.text()
-    backup_lista[4] = tictac.lineEdit_5.text()
-    backup_lista[5] = tictac.lineEdit_6.text()
-    backup_lista[6] = tictac.lineEdit_7.text()
-    backup_lista[7] = tictac.lineEdit_8.text()
-    backup_lista[8] = tictac.lineEdit_9.text()
+    lista = getCampos()
+    
+    for i in range(9):
+        backup_lista[i] = lista[i]
 
 def replace(lista): #adiciona na tela alguma lista 
     tictac.lineEdit.setText(lista[0])
@@ -148,7 +132,7 @@ def game_dupla():#Incrementa +1 na variavel "turno" para cada lance valido
     # ===========TURNOS=======================
     global turno #acessa a variavel global vez
     global backup_lista
-    #============botao acionado===============
+    
     vez = verificador(turno) #verifica a vez com base no "turno"
     lista = getCampos() #atribui em uma variavel todos os campos do jogo
     verifica = verify_turn(lista) #verifica o turno com base na contagem de "x" e "o"
@@ -159,17 +143,37 @@ def game_dupla():#Incrementa +1 na variavel "turno" para cada lance valido
     else:
         verifica = verify_turn(lista) #verifica o turno com base na contagem de "x" e "o"
         if vez == verifica:#unica condição que atende ao jogo e 
-            turno = turno + 1
-            tictac.label.setText("")
+            turno = turno + 1 #incrementa o turno
+            tictac.label.setText("")#limpa alguma mensagem de erro anterior
             backup(lista)#faz backup da lista
-            win()
+            win()#verifica a vitoria
             
         else:
             tictac.label.setText("Lance inapropriado")
             replace(backup_lista)#recupera a ultima tela que esteve correta
     
+def game_engine():
+    global turno #acessa a variavel global vez
+    global backup_lista
     
-
+    vez = verificador(turno) #verifica a vez com base no "turno"
+    lista = getCampos() #atribui em uma variavel todos os campos do jogo
+    verifica = verify_turn(lista) #verifica o turno com base na contagem de "x" e "o"
+    
+    if lista == True: #caso o usuario digite algo fora do estipulado
+        tictac.label.setText("So pode usar letras X ou O maiusculas")
+        replace(backup_lista)
+    else:
+        verifica = verify_turn(lista) #verifica o turno com base na contagem de "x" e "o"
+        if vez == verifica:#unica condição que atende ao jogo e 
+            turno = turno + 1 #incrementa o turno
+            tictac.label.setText("")#limpa alguma mensagem de erro anterior
+            backup(lista)#faz backup da lista
+            win()#verifica a vitoria
+            
+        else:
+            tictac.label.setText("Lance inapropriado")
+            replace(backup_lista)#recupera a ultima tela que esteve correta
 
 #====================================================|
 #                      Qt Designer                   |
@@ -178,7 +182,8 @@ def game_dupla():#Incrementa +1 na variavel "turno" para cada lance valido
 app=QtWidgets.QApplication([])
 
 # =================TELAS====================
-tictac = uic.loadUi("templates/tictac.ui")
+tictac = uic.loadUi("templates/tictac-dupla.ui")
+engine = uic.loadUi("templates/tictac-engine.ui")
 primeira = uic.loadUi("templates/principal.ui")
 # ==========================================
 
@@ -188,11 +193,18 @@ def abrir_tela():
     primeira.close()
     tictac.show()
     tictac.label.setText("X começa")
+def abrir_engine():
+    primeira.close()
+    engine.show()
+    engine.label.setText("Jogue apenas com X")
+
 primeira.pushButton.clicked.connect(abrir_tela)
+primeira.pushButton_2.clicked.connect(abrir_engine)
 #===========================================
 
 #=================JOGANDO===================
 tictac.pushButton.clicked.connect(game_dupla)
+engine.pushButton.clicked.connect(game_engine)
 #===========================================
 
 
